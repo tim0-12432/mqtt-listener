@@ -26,8 +26,8 @@ jobs:
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag tim0-12432/mqtt-listener:${{ steps.vartag.outputs.tag }}
     - name: Push the tagged Docker image
-      run: docker push tim0-12432/mqtt-listener:${{ steps.vartag.outputs.tag }}
+      run: docker push ghcr.io/tim0-12432/mqtt-listener:${{ steps.vartag.outputs.tag }}
     - name: Build the latest Docker image
       run: docker build . --file Dockerfile --tag tim0-12432/mqtt-listener:latest
     - name: Push the latest Docker image
-      run: docker push tim0-12432/mqtt-listener:latest
+      run: docker push ghcr.io/tim0-12432/mqtt-listener:latest
