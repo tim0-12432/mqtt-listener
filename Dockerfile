@@ -9,7 +9,6 @@ RUN pip install -r requirements.txt
 COPY static /app/static
 COPY templates /app/templates
 COPY run.py /app/run.py
-EXPOSE 8080
 CMD ["python", "run.py"]
 
 # Health Check
