@@ -1,0 +1,112 @@
+:root {
+    --bg: #fafafa;
+    --text: #333;
+    --console-bg: #222;
+    --console-fg: #0e0;
+    --error-bg: #fcc;
+    --error-fg: #c00;
+    --info-bg: #ccf;
+    --info-fg: #00c;
+    --success-bg: #cfc;
+    --success-fg: #0c0;
+    --warning-bg: #ffc;
+    --warning-fg: #cc0;
+}
+
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+html, body {
+    height: 100vh;
+    width: 100vw;
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: sans-serif;
+    overflow: hidden;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+h1 {
+    font-size: 28px;
+    font-weight: 800;
+    padding: 20px 40px;
+}
+
+#message {
+    width: 100%;
+    padding: 10px 20px;
+    font-size: 25px;
+}
+
+#message[data-stylized="error"] {
+    background-color: var(--error-bg);
+    color: var(--error-fg);
+}
+
+#message[data-stylized="warn"] {
+    background-color: var(--warning-bg);
+    color: var(--warning-fg);
+}
+
+#message[data-stylized="info"] {
+    background-color: var(--info-bg);
+    color: var(--info-fg);
+}
+
+#message[data-stylized="success"] {
+    background-color: var(--success-bg);
+    color: var(--success-fg);
+}
+
+#message[data-visibility="hidden"] {
+    display: none;
+}
+
+#message[data-visibility="visible"] {
+    display: block;
+}
+
+#console {
+    width: 100%;
+    max-height: 100%;
+    flex-grow: 1;
+    background-color: var(--console-bg);
+    color: var(--console-fg);
+    font-size: 20px;
+    overflow: scroll;
+    padding: 15px 30px;
+    font-family: monospace;
+    cursor: crosshair;
+}
+
+#console p {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+#console p span:first-child,
+#console p span:nth-child(2) {
+    padding-right: 25px;
+    text-align: left;
+}
+
+#console p span:nth-child(2) {
+    flex-grow: 1;
+}
+
+#console p span:last-child {
+    flex-grow: 3;
+    text-align: left;
+}
