@@ -22,18 +22,18 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Login to Github Packages
-      uses: docker/login-action@latest
+      uses: docker/login-action@v1.13.0
       with:
         registry: ${{ env.REGISTRY }}
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     - name: Extract metadata (tags, labels) for Docker
       id: meta
-      uses: docker/metadata-action@latest
+      uses: docker/metadata-action@v3.6.2
       with:
         images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
     - name: Build and push Docker image
-      uses: docker/build-push-action@latest
+      uses: docker/build-push-action@v2.9.0
       with:
         context: .
         push: true
