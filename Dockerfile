@@ -9,4 +9,7 @@ RUN pip install -r requirements.txt
 COPY static /app/static
 COPY templates /app/templates
 COPY run.py /app/run.py
-ENTRYPOINT ["python", "run.py"]
+CMD ["python", "run.py"]
+
+# Health Check
+HEALTHCHECK CMD curl --fail http://localhost:8080/ || exit 1
