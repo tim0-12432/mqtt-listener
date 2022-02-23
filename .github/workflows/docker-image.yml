@@ -9,7 +9,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: mqttlistener
+  IMAGE_NAME: mqtt-listener
 jobs:
 
   build:
@@ -31,7 +31,7 @@ jobs:
       id: meta
       uses: docker/metadata-action@v3.6.2
       with:
-        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+        images: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}
     - name: Build and push Docker image
       uses: docker/build-push-action@v2.9.0
       with:
