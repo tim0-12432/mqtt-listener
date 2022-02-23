@@ -14,5 +14,14 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: Get the tag
+      id: vartag
+      run: echo ::set-output name=tag::$(date + "%Y%m%d-%H%M%S")
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag mqtt-listener:$(date +%s)
+      run: docker build . --file Dockerfile --tag tim0-12432/mqtt-listener:${{ steps.vartag.outputs.tag }}
+    - name: Push the tagged Docker image
+      run: docker push tim0-12432/mqtt-listener:${{steps.vars.outputs.tag}}
+    - name: Build the latest Docker image
+      run: docker build . --file Dockerfile --tag tim0-12432/mqtt-listener:latest
+    - name: Push the latest Docker image
+      run: docker push tim0-12432/mqtt-listener:latest
