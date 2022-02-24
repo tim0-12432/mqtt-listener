@@ -36,11 +36,11 @@
                         const paragraph = document.createElement("p");
 
                         const time = document.createElement("span");
-                        time.innerHTML = element.time;
+                        time.innerHTML = element.time.htmlEscape();
                         const topic = document.createElement("span");
-                        topic.innerHTML = element.topic;
+                        topic.innerHTML = element.topic.htmlEscape();
                         const payload = document.createElement("span");
-                        payload.innerHTML = element.payload;
+                        payload.innerHTML = element.payload.htmlEscape();
 
                         paragraph.appendChild(time);
                         paragraph.appendChild(topic);
