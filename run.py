@@ -46,9 +46,9 @@ if __name__ == "__main__":
         global results
         if (cfg.sys_on == "False") and msg.topic.startswith("$SYS"):
             return
-        if len(results) >= cfg.max_entries:
-            results = results.iloc[1:]
-        results.loc[len(results)] = [msg.timestamp, msg.topic, msg.payload]
+        if results.shape[0] >= cfg.max_entries:
+            results = results.iloc[3:, :]
+        results.loc[results.shape[0]] = [msg.timestamp, msg.topic, msg.payload]
 
 
     client = mqtt.Client("MQTT_Listener", clean_session=True)
