@@ -13,6 +13,3 @@ COPY /templates /app/templates
 COPY /run.py /app/run.py
 ENTRYPOINT [ "python" ]
 CMD ["run.py"]
-
-# Health Check
-HEALTHCHECK CMD curl --fail http://localhost:8080/ || exit 1
