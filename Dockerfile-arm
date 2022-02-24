@@ -3,8 +3,8 @@
 FROM arm32v7/python:3.7.12-slim
 COPY /requirements.txt /app/requirements.txt
 WORKDIR /app
-RUN sudo apt-get install libatlas-base-dev
-RUN sudo apt-get install python3-numpy
+RUN sudo apt-get install libatlas-base-dev -y
+RUN sudo apt-get install python3-numpy -y
 RUN pip install --index-url=https://www.piwheels.org/simple --no-cache-dir -r requirements.txt
 
 # Run App
