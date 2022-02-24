@@ -6,9 +6,9 @@ WORKDIR /app
 RUN pip install -r requirements.txt
 
 # Run App
-COPY static /app/static
-COPY templates /app/templates
-COPY run.py /app/run.py
+COPY static /static
+COPY templates /templates
+COPY run.py /run.py
 CMD ["python", "run.py"]
 
 # Health Check
