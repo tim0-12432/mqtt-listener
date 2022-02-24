@@ -8,7 +8,7 @@ import logging
 
 
 DEFAULT_CONFIG = {
-    "app.host": "localhost",
+    "app.host": "0.0.0.0",
     "app.port": 8080,
     "app.debug": False,
     "mqtt.host": "localhost",
