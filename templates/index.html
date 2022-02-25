@@ -36,11 +36,11 @@
                         const paragraph = document.createElement("p");
 
                         const time = document.createElement("span");
-                        time.innerHTML = element.time.htmlEscape();
+                        time.innerText = element.time;
                         const topic = document.createElement("span");
-                        topic.innerHTML = element.topic.htmlEscape();
+                        topic.innerText = element.topic;
                         const payload = document.createElement("span");
-                        payload.innerHTML = element.payload.htmlEscape();
+                        payload.innerText = element.payload;
 
                         paragraph.appendChild(time);
                         paragraph.appendChild(topic);
@@ -51,6 +51,7 @@
                 })
                 .catch(error => {
                     addMessage("Error fetching MQTT data!", "error");
+                    console.error(error);
                     cons.innerHTML = currentData;
                 });
         }
