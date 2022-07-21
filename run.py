@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta, tzinfo
 from flask import Flask, jsonify, render_template
 from config import config_from_env, config_from_dict, ConfigurationSet
 from flask.logging import default_handler
@@ -41,6 +42,8 @@ if __name__ == "__main__":
         config_from_env(prefix=PREFIX, separator="-", lowercase_keys=True),
         config_from_dict(DEFAULT_CONFIG)
     )
+    cfg["app.debug"] = str(cfg["app.debug"]).lower() == "true"
+    cfg["sys_on"] = str(cfg["sys_on"]).lower() == "true"
 
     logging.basicConfig(level=cfg.log_level, format='%(name)s: %(levelname)s - %(message)s')
     logging.debug("Configuration: %s", cfg)
@@ -69,7 +72,7 @@ if __name__ == "__main__":
     client.on_connect = on_connect
     client.on_message = on_message
 
-    client.connect(cfg["mqtt"]["host"], cfg["mqtt"]["port"], 60)
+    client.connect(cfg["mqtt.host"], cfg["mqtt.port"], 60)
 
     client.loop_start()
 
@@ -88,12 +91,12 @@ if __name__ == "__main__":
         result_df = results.tail(cfg.max_cons_rows)
         result_list = []
         for idx, row in result_df.iterrows():
-            date = round(row["time"])
-            result_list.append({"time": date, "topic": row["topic"], "payload": str(row["payload"]).replace("b\'", "").replace("\'", "")})
+            time = (datetime.fromtimestamp(row["time"]) - timedelta(hours=2)).strftime("%H:%M:%S")
+            result_list.append({"time": time, "topic": row["topic"], "payload": str(row["payload"]).replace("b\'", "").replace("\'", "")})
         return jsonify(result_list)
 
-    if cfg["app"]["debug"] == True:
-        app.run(host=cfg["app"]["host"], port=cfg["app"]["port"], debug=cfg["app"]["debug"], use_reloader=False)
+    if cfg["app.debug"] == True:
+        app.run(host=cfg["app.host"], port=cfg["app.port"], debug=cfg["app.debug"], use_reloader=False)
     else:
-        http_server = WSGIServer((cfg["app"]["host"], cfg["app"]["port"]), app)
+        http_server = WSGIServer((cfg["app.host"], cfg["app.port"]), app)
         http_server.serve_forever()

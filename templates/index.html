@@ -6,57 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MQTT Listener</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script type="text/javascript" src="{{ url_for('static', filename='data-fetching.js') }}" defer></script>
 </head>
 <body>
-    <h1>MQTT Listener</h1>
+    <nav>
+        <h1>MQTT Listener</h1>
+    </nav>
     <p id="message" data-visibility="hidden"></p>
     <div id="console"></div>
-    <script>
-        const cons = document.getElementById("console");
-        const message = document.getElementById("message");
-
-        function addMessage(msg, type) {
-            message.dataset.visibility = "visible";
-            message.dataset.stylized = type;
-            message.innerText = msg;
-        }
-
-        function removeMessage() {
-            message.dataset.visibility = "hidden";
-            message.removeAttribute("stylized");
-        }
-
-        function fetchData() {
-            const currentData = cons.innerHTML;
-            const network = fetch("/data")
-                .then(response => response.json())
-                .then(data => {
-                    cons.innerHTML = "<p><span>Time</span><span>Topic</span><span>Payload</span></p><p>------------------------------------------------------------------</p>";
-                    data.forEach((element, idx) => {
-                        const paragraph = document.createElement("p");
-
-                        const time = document.createElement("span");
-                        time.innerText = element.time;
-                        const topic = document.createElement("span");
-                        topic.innerText = element.topic;
-                        const payload = document.createElement("span");
-                        payload.innerText = element.payload;
-
-                        paragraph.appendChild(time);
-                        paragraph.appendChild(topic);
-                        paragraph.appendChild(payload);
-                        cons.appendChild(paragraph);
-                    });
-                    removeMessage();
-                })
-                .catch(error => {
-                    addMessage("Error fetching MQTT data!", "error");
-                    console.error(error);
-                    cons.innerHTML = currentData;
-                });
-        }
-
-        setInterval(fetchData, 1000);
-    </script>
 </body>
 </html>
