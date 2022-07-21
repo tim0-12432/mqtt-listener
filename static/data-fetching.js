@@ -1,4 +1,4 @@
-const cons = document.getElementById("console");
+let cons = document.getElementById("console");
 const message = document.getElementById("message");
 
 function addMessage(msg, type) {
@@ -12,8 +12,47 @@ function removeMessage() {
     message.removeAttribute("stylized");
 }
 
+const listItem = (text, stat) => {
+    const li = document.createElement("li");
+    const name = document.createElement("p");
+    name.innerText = text + ":";
+    const status = document.createElement("p");
+    status.innerText = stat;
+    li.appendChild(name);
+    li.appendChild(status);
+    return li;
+}
+
+const listBoolItem = (text, stat) => {
+    const li = document.createElement("li");
+    const name = document.createElement("p");
+    name.innerText = text + ":";
+    const container = document.createElement("div");
+    const status = document.createElement("div");
+    status.classList.add("checkradio");
+    status.classList.add(stat ? "checked" : "unchecked");
+    li.appendChild(name);
+    container.appendChild(status);
+    li.appendChild(container);
+    return li;
+}
+
+const listBarItem = (text, stat) => {
+    const li = document.createElement("li");
+    const name = document.createElement("p");
+    name.innerText = text + ":";
+    const bar_container = document.createElement("p");
+    bar_container.classList.add("bar");
+    const bar = document.createElement("span");
+    bar.style.width = Math.abs(stat) + "%";
+    li.appendChild(name);
+    bar_container.appendChild(bar);
+    li.appendChild(bar_container);
+    return li;
+}
+
 function fetchData() {
-    const currentData = cons.innerHTML;
+    const currentData = cons;
     fetch("/data")
         .then(response => {
             if (response.ok) {
@@ -70,7 +109,7 @@ function fetchData() {
         .catch(error => {
             addMessage("Error fetching MQTT data!", "error");
             console.error(error);
-            cons.innerHTML = currentData;
+            cons = currentData;
         });
     const tasmTab = document.getElementById("tasmota-tab");
     if (tasmTab != undefined) {
@@ -85,29 +124,28 @@ function fetchData() {
             })
             .then(data => {
                 tasmTab.innerHTML = "";
-                if (data = []){
+                if (data.length === 0) {
                     const paragraph = document.createElement("p");
                     paragraph.innerText = "No devices found!";
                     tasmTab.appendChild(paragraph);
-                }
-                else {
+                } else {
                     data.forEach((element, _) => {
-                        const paragraph = document.createElement("p");
+                        const container = document.createElement("div");
 
-                        const time = document.createElement("p");
-                        time.classList.add("time");
-                        time.innerText = element.time;
-                        const topic = document.createElement("p");
-                        topic.classList.add("topic");
-                        topic.innerText = element.topic;
-                        const payload = document.createElement("p");
-                        payload.classList.add("load");
-                        payload.innerText = element.payload;
+                        const name = document.createElement("h3");
+                        name.classList.add("name");
+                        name.innerText = element.name;
 
-                        paragraph.appendChild(time);
-                        paragraph.appendChild(topic);
-                        paragraph.appendChild(payload);
-                        cons.appendChild(paragraph);
+                        container.appendChild(name);
+
+                        const stats = JSON.parse(element.stats);
+                        container.appendChild(listItem("Uptime", stats.Uptime));
+                        container.appendChild(listBoolItem("Power", stats.POWER.toUpperCase() === "ON"));
+                        container.appendChild(listBarItem("Load", stats.LoadAvg));
+                        container.appendChild(listBarItem("Heap", stats.Heap));
+                        container.appendChild(listItem("SSID", stats.Wifi.SSId));
+                        container.appendChild(listBarItem("Signal", stats.Wifi.Signal));
+                        tasmTab.appendChild(container);
                     });
                 }
                 console.log("Refreshed data...")

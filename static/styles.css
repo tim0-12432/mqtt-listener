@@ -1,6 +1,7 @@
 :root {
     --bg: #fafafa;
     --text: #333;
+    --bar-bg: #ddd;
     --console-bg: #222;
     --console-fg: #0e0;
     --error-bg: #fcc;
@@ -56,6 +57,74 @@ body {
 #tasmota-tab.hidden {
     transform: translateX(100%);
     transition: 300ms ease-in-out;
+}
+
+#tasmota-tab > div {
+    margin-bottom: 10px;
+    width: max-content;
+}
+
+#tasmota-tab > div:last-child {
+    margin-bottom: none;
+}
+
+#tasmota-tab > div > h3 {
+    width: 100%;
+    text-align: center;
+}
+
+#tasmota-tab > div > li {
+    list-style-type: none;
+    width: 100%;
+    margin-bottom: 3px;
+    display: flex;
+}
+
+#tasmota-tab > div > li > p:first-child {
+    margin-right: 10px;
+    flex-grow: 1;
+}
+
+#tasmota-tab > div > li > div,
+#tasmota-tab > div > li > p:last-child {
+    flex-grow: 2;
+}
+
+#tasmota-tab > div > li > div {
+    display: flex;
+    justify-content: flex-start;
+}
+
+#tasmota-tab .checkradio {
+    width: var(--font-size);
+    height: var(--font-size);
+    border-radius: 50%;
+}
+
+#tasmota-tab .checkradio.checked {
+    box-shadow: inset 0 0 0 2px var(--success-fg), inset 0 0 0 4px var(--bg);
+    background-color: var(--success-fg);
+}
+
+#tasmota-tab .checkradio.unchecked {
+    box-shadow: inset 0 0 0 2px var(--error-fg), inset 0 0 0 4px var(--bg);
+    background-color: var(--error-fg);
+}
+
+#tasmota-tab .bar {
+    min-width: calc(var(--font-size) * 7);
+    min-height: var(--font-size);
+    background-color: var(--bar-bg);
+    position: relative;
+}
+
+#tasmota-tab .bar > span {
+    min-width: 5px;
+    height: 100%;
+    background-color: var(--console-fg);
+    position: absolute;
+    left: 0;
+    top: 0;
 }
 
 nav {
@@ -171,7 +240,7 @@ nav .zoom button:hover svg path {
     display: grid;
     grid-template-columns: 0.5fr 1fr 3fr;
     grid-template-rows: 1fr;
-    grid-column-gap: 25px;
+    grid-column-gap: var(--font-size);
 }
 
 #console > p > p {

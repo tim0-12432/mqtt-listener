@@ -107,7 +107,16 @@ if __name__ == "__main__":
 
     @app.route("/tasmota/devices", methods=["GET"])
     def devices():
-        return jsonify([])
+        device_name_topics = results.loc[(results["topic"].str.startswith("tele/"))].loc[(results["topic"].str.endswith("/STATE"))].groupby("topic").count().reset_index()["topic"].values
+        device_stats = []
+        for device_topic in device_name_topics:
+            payload = results.loc[results["topic"] == device_topic].tail(1)["payload"].values[0].decode("utf-8")
+            device_stats.append({
+                "name": device_topic.split("/")[-2].replace("_", " ").replace("-", " ").replace(".", " ").replace("tasmota", ""),
+                "topic": device_topic,
+                "stats": payload
+            })
+        return jsonify(device_stats)
 
     @app.route("/data", methods=["GET"])
     def get_results():
