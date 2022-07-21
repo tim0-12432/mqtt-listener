@@ -72,6 +72,58 @@ function fetchData() {
             console.error(error);
             cons.innerHTML = currentData;
         });
+    const tasmTab = document.getElementById("tasmota-tab");
+    if (tasmTab != undefined) {
+        const currentDevices = tasmTab.innerHTML;
+        fetch("/tasmota/devices")
+            .then(response => {
+                if (response.ok) {
+                    return response.json()
+                } else {
+                    console.error(response.status + ": " + response.statusText);
+                }
+            })
+            .then(data => {
+                tasmTab.innerHTML = "";
+                if (data = []){
+                    const paragraph = document.createElement("p");
+                    paragraph.innerText = "No devices found!";
+                    tasmTab.appendChild(paragraph);
+                }
+                else {
+                    data.forEach((element, _) => {
+                        const paragraph = document.createElement("p");
+
+                        const time = document.createElement("p");
+                        time.classList.add("time");
+                        time.innerText = element.time;
+                        const topic = document.createElement("p");
+                        topic.classList.add("topic");
+                        topic.innerText = element.topic;
+                        const payload = document.createElement("p");
+                        payload.classList.add("load");
+                        payload.innerText = element.payload;
+
+                        paragraph.appendChild(time);
+                        paragraph.appendChild(topic);
+                        paragraph.appendChild(payload);
+                        cons.appendChild(paragraph);
+                    });
+                }
+                console.log("Refreshed data...")
+            })
+            .catch(error => {
+                console.error(error);
+                if (currentDevices == "") {
+                    tasmTab.innerHTML = "";
+                    const paragraph = document.createElement("p");
+                    paragraph.innerText = "No devices found!";
+                    tasmTab.appendChild(paragraph);
+                } else {
+                    tasmTab.innerHTML = currentDevices;
+                }
+            });
+    }
 }
 
 setInterval(fetchData, 1000);

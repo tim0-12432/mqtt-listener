@@ -1,3 +1,5 @@
 .dccache
 .env
 .venv
+static/.webassets-cache
+static/dist

@@ -28,6 +28,7 @@ html, body {
     font-family: sans-serif;
     overflow: hidden;
     font-size: var(--font-size);
+    position: relative;
 }
 
 body {
@@ -37,18 +38,80 @@ body {
     align-items: center;
 }
 
+#tasmota-tab {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    min-width: 100px;
+    max-width: 100%;
+    min-height: 50px;
+    background-color: var(--bg);
+    font-size: var(--font-size);
+    color: var(--text);
+    padding: 20px;
+    transform: translateX(0);
+    transition: 300ms ease-in-out;
+}
+
+#tasmota-tab.hidden {
+    transform: translateX(100%);
+    transition: 300ms ease-in-out;
+}
+
 nav {
     padding: 20px 40px;
     display: flex;
     justify-content: center;
     align-items: center;
     position: relative;
+    background-color: var(--bg);
     width: 100%;
 }
 
 nav > h1 {
     font-size: 28px;
     font-weight: 800;
+}
+
+nav .zoom {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    display: flex;
+    padding: 15px;
+}
+
+nav .zoom button {
+    width: 25px;
+    height: 25px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--text);
+    color: var(--text);
+    background-color: white;
+    border-radius: 5px;
+    margin-left: 10px;
+    transition: 200ms ease-in-out;
+    font-weight: 800;
+}
+
+nav .zoom button.tasmota {
+    padding: 3px;
+}
+
+nav .zoom button:hover svg path {
+    fill: var(--text);
+    transition: 200ms ease-in-out;
+}
+
+nav .zoom button:hover {
+    border: 1px solid var(--console-fg);
+    color: var(--console-fg);
+    background-color: white
+}
+
+nav .zoom button:hover svg path {
+    fill: var(--console-fg);
 }
 
 #message {

@@ -1,5 +1,7 @@
 from datetime import datetime, timedelta, tzinfo
 from flask import Flask, jsonify, render_template
+from flask_minify import Minify
+from flask_assets import Environment, Bundle
 from config import config_from_env, config_from_dict, ConfigurationSet
 from flask.logging import default_handler
 from gevent.pywsgi import WSGIServer
@@ -29,7 +31,10 @@ DEFAULT_CONFIG = {
     "max_entries": 100,
 
     # maximum number of entries to display in the web interface
-    "max_cons_rows": 50
+    "max_cons_rows": 50,
+
+    # tasmota devices to be monitored
+    "tasmota_enabled": False
 }
 
 PREFIX = "MQTT_LISTEN"
@@ -44,6 +49,7 @@ if __name__ == "__main__":
     )
     cfg["app.debug"] = str(cfg["app.debug"]).lower() == "true"
     cfg["sys_on"] = str(cfg["sys_on"]).lower() == "true"
+    cfg["tasmota_enabled"] = str(cfg["tasmota_enabled"]).lower() == "true"
 
     logging.basicConfig(level=cfg.log_level, format='%(name)s: %(levelname)s - %(message)s')
     logging.debug("Configuration: %s", cfg)
@@ -79,18 +85,35 @@ if __name__ == "__main__":
     wz_log = logging.getLogger("werkzeug")
     wz_log.setLevel(cfg.log_level)
     app = Flask("mqtt-listener")
+    Minify(app, html=True, js=True, cssless=True)
+    assets = Environment(app)
     app.logger.addHandler(default_handler)
     app.logger.setLevel(cfg.log_level)
+
+    style_bundle = Bundle("styles.css", filters="cssmin", output="dist/style.min.css", extra={"rel": "stylesheet/css"})
+    script_bundle = Bundle("data-fetching.js", "layout.js", filters="jsmin", output="dist/script.min.js", extra={"rel": "script/javascript"})
+    assets.register("style_bundle", style_bundle)
+    assets.register("script_bundle", script_bundle)
+    style_bundle.build()
+    script_bundle.build()
 
     @app.route("/")
     def index():
         return render_template("index.html")
 
+    @app.route("/tasmota", methods=["GET"])
+    def tasmota():
+        return jsonify({ "enabled": cfg["tasmota_enabled"] })
+
+    @app.route("/tasmota/devices", methods=["GET"])
+    def devices():
+        return jsonify([])
+
     @app.route("/data", methods=["GET"])
     def get_results():
         result_df = results.tail(cfg.max_cons_rows)
         result_list = []
-        for idx, row in result_df.iterrows():
+        for _, row in result_df.iterrows():
             time = (datetime.fromtimestamp(row["time"]) - timedelta(hours=2)).strftime("%H:%M:%S")
             result_list.append({"time": time, "topic": row["topic"], "payload": str(row["payload"]).replace("b\'", "").replace("\'", "")})
         return jsonify(result_list)

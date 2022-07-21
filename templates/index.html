@@ -5,12 +5,20 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MQTT Listener</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <script type="text/javascript" src="{{ url_for('static', filename='data-fetching.js') }}" defer></script>
+    {% assets "style_bundle" %}
+        <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}">
+    {% endassets %}
+    {% assets "script_bundle" %}
+        <script type="text/javascript" src="{{ ASSET_URL }}" defer></script>
+    {% endassets %}
 </head>
 <body>
     <nav>
         <h1>MQTT Listener</h1>
+        <div class="zoom">
+            <button id="btn-plus">+</button>
+            <button id="btn-minus">-</button>
+        </div>
     </nav>
     <p id="message" data-visibility="hidden"></p>
     <div id="console"></div>
