@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "declaration": false,
+        "sourceMap": false,
+        "outDir": "./static",
+        "strict": true,
+        "baseUrl": ".",
+        "esModuleInterop": true
+    },
+    "include": [
+        "./typescript/**/*"
+    ],
+}

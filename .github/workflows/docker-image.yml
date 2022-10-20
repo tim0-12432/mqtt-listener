@@ -23,6 +23,8 @@ jobs:
     - name: Get the tag
       id: vartag
       run: echo ::set-output name=tag::$(date +"%Y%m%d-%H%M%S")
+    - name: Build static files
+      run: tsc
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag ghcr.io/tim0-12432/mqtt-listener:${{ steps.vartag.outputs.tag }}
     - name: Push the tagged Docker image
