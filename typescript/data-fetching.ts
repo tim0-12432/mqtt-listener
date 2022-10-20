@@ -1,7 +1,9 @@
-let cons = document.getElementById("console");
-const message = document.getElementById("message");
+let cons = document.getElementById("console") as HTMLDivElement;
+const message = document.getElementById("message") as HTMLParagraphElement;
 
-function addMessage(msg, type) {
+type MessageStyles = "warn" | "error" | "success" | "info";
+
+function addMessage(msg: string, type: MessageStyles) {
     message.dataset.visibility = "visible";
     message.dataset.stylized = type;
     message.innerText = msg;
@@ -12,18 +14,18 @@ function removeMessage() {
     message.removeAttribute("stylized");
 }
 
-const listItem = (text, stat) => {
+const listItem = (text: string, stat: string | number): HTMLLIElement => {
     const li = document.createElement("li");
     const name = document.createElement("p");
     name.innerText = text + ":";
     const status = document.createElement("p");
-    status.innerText = stat;
+    status.innerText = stat.toString();
     li.appendChild(name);
     li.appendChild(status);
     return li;
 }
 
-const listBoolItem = (text, stat) => {
+const listBoolItem = (text: string, stat: boolean): HTMLLIElement => {
     const li = document.createElement("li");
     const name = document.createElement("p");
     name.innerText = text + ":";
@@ -37,7 +39,7 @@ const listBoolItem = (text, stat) => {
     return li;
 }
 
-const listBarItem = (text, stat) => {
+const listBarItem = (text: string, stat: number): HTMLLIElement => {
     const li = document.createElement("li");
     const name = document.createElement("p");
     name.innerText = text + ":";
@@ -51,6 +53,18 @@ const listBarItem = (text, stat) => {
     return li;
 }
 
+type MQTTData = {
+    time: string,
+    topic: string,
+    payload: string
+}[]
+
+type TasmotaData = {
+    name: string,
+    topic: string,
+    stats: string
+}[]
+
 function fetchData() {
     const currentData = cons;
     fetch("/data")
@@ -62,15 +76,15 @@ function fetchData() {
                 addMessage("Error: " + response.status + ": " + response.statusText, "error");
             }
         })
-        .then(data => {
+        .then((data: MQTTData) => {
             cons.innerHTML = "";
-            const titles = {
+            const titles: {[key: string]: string} = {
                 "Time": "time",
                 "Topic": "topic",
                 "Payload": "load"
             }
-            const headlines = document.createElement("p");
-            const separator = document.createElement("p");
+            const headlines: HTMLParagraphElement = document.createElement("p");
+            const separator: HTMLParagraphElement = document.createElement("p");
             Object.keys(titles).forEach(title => {
                 const headline = document.createElement("p");
                 headline.innerText = title;
@@ -122,7 +136,7 @@ function fetchData() {
                     console.error(response.status + ": " + response.statusText);
                 }
             })
-            .then(data => {
+            .then((data: TasmotaData) => {
                 tasmTab.innerHTML = "";
                 if (data.length === 0) {
                     const paragraph = document.createElement("p");

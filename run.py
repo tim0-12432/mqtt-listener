@@ -56,7 +56,7 @@ if __name__ == "__main__":
 
     results = pd.DataFrame(columns=["time", "topic", "payload"])
 
-    def on_connect(client, userdata, flags, rc):
+    def on_connect(client: mqtt.Client, userdata: any, flags: any, rc: any) -> None:
         logging.info(f"Connected to {cfg.mqtt.host}:{cfg.mqtt.port} with result code {rc}")
         if cfg.sys_on:
             client.subscribe([("$SYS/#",0), ("#",0)])
@@ -64,7 +64,7 @@ if __name__ == "__main__":
             client.subscribe([("#",0)])
 
 
-    def on_message(client, userdata, msg):
+    def on_message(client: mqtt.Client, userdata: any, msg: mqtt.MQTTMessage) -> None:
         global results
         if (cfg.sys_on == "False") and msg.topic.startswith("$SYS"):
             return

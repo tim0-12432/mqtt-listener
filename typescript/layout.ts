@@ -1,24 +1,22 @@
-const vars = document.querySelector(":root");
-const btnPlus = document.getElementById('btn-plus');
-const btnMinus = document.getElementById('btn-minus');
+const vars = document.querySelector(":root") as HTMLElement;
+const btnPlus = document.getElementById('btn-plus') as HTMLButtonElement;
+const btnMinus = document.getElementById('btn-minus') as HTMLButtonElement;
 
 function addTasmotaBtn() {
-    const btn = document.createElement("button");
+    const btn: HTMLButtonElement = document.createElement("button");
     btn.classList.add("tasmota");
-    const img = document.createElement("img");
-    img.src = "/static/tasmota-logo.svg";
-    img.alt = "Tasmota";
+    const img = document.createElement("div");
     btn.appendChild(img);
     btn.addEventListener("click", () => {
         toggleTasmotaTab();
     }
     );
-    btnMinus.parentElement.appendChild(btn);
+    btnMinus.parentElement!.appendChild(btn);
 }
 
 function toggleTasmotaTab() {
     if (document.body.classList.contains("tasmota-open")) {
-        const tasmotaTab = document.getElementById("tasmota-tab");
+        const tasmotaTab = document.getElementById("tasmota-tab") as HTMLDivElement;
         tasmotaTab.classList.add("hidden");
         setTimeout(() => {
             tasmotaTab.remove();
@@ -58,12 +56,11 @@ fetch("/tasmota").then(response => {
     } else {
         console.error(response.status + ": " + response.statusText);
     }
-}).then(data => {
+}).then((data: {enabled: boolean}) => {
     if (data.enabled == true){
         addTasmotaBtn();
     }
 }).catch(error => {
     addMessage("Error retrieving tasmota information!", "warn");
     console.error(error);
-    cons.innerHTML = currentData;
 });
