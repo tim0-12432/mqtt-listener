@@ -89,6 +89,7 @@ body {
 #tasmota-tab > div > h3 {
     width: 100%;
     text-align: center;
+    margin-top: calc(var(--font-size) / 3 * 2);
 }
 
 #tasmota-tab > div > li {
@@ -131,9 +132,10 @@ body {
 
 #tasmota-tab .bar {
     min-width: calc(var(--font-size) * 7);
-    min-height: var(--font-size);
+    min-height: calc(var(--font-size) - 2px);
     background-color: var(--bar-bg);
     position: relative;
+    overflow: hidden;
 }
 
 #tasmota-tab .bar > span {

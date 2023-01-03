@@ -19,7 +19,7 @@ const listItem = (text: string, stat: string | number): HTMLLIElement => {
     const name = document.createElement("p");
     name.innerText = text + ":";
     const status = document.createElement("p");
-    status.innerText = stat.toString();
+    status.innerText = stat?.toString();
     li.appendChild(name);
     li.appendChild(status);
     return li;
@@ -45,6 +45,7 @@ const listBarItem = (text: string, stat: number): HTMLLIElement => {
     name.innerText = text + ":";
     const bar_container = document.createElement("p");
     bar_container.classList.add("bar");
+    bar_container.title = Math.round(Math.abs(stat) * 100) / 100 + "%";
     const bar = document.createElement("span");
     bar.style.width = Math.abs(stat) + "%";
     li.appendChild(name);
@@ -59,11 +60,25 @@ type MQTTData = {
     payload: string
 }[]
 
+type SupportedType = "bulb" | "plug" | "unknown";
+
 type TasmotaData = {
     name: string,
+    type: SupportedType,
     topic: string,
     stats: string
 }[]
+
+function getIconForType(type: SupportedType): string {
+    switch (type) {
+        case "bulb":
+            return "&#9788; ";
+        case "plug":
+            return "&#9889; ";
+        default:
+            return "";
+    }
+}
 
 function fetchData() {
     const currentData = cons;
@@ -148,7 +163,7 @@ function fetchData() {
 
                         const name = document.createElement("h3");
                         name.classList.add("name");
-                        name.innerText = element.name;
+                        name.innerHTML = getIconForType(element.type) + element.name;
 
                         container.appendChild(name);
 
