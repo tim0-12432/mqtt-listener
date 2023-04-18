@@ -54,31 +54,28 @@ const listBarItem = (text: string, stat: number): HTMLLIElement => {
     return li;
 }
 
+function truncate(input: string, length: number, front: boolean = true) {
+    if (input.length > length) {
+        if (front) {
+            return input.substring(0, length) + '...';
+        } else {
+            return '...' + input.substring(input.length - length, input.length);
+        }
+    }
+    return input;
+};
+
 type MQTTData = {
     time: string,
     topic: string,
     payload: string
 }[]
 
-type SupportedType = "bulb" | "plug" | "unknown";
-
 type TasmotaData = {
     name: string,
-    type: SupportedType,
     topic: string,
     stats: string
 }[]
-
-function getIconForType(type: SupportedType): string {
-    switch (type) {
-        case "bulb":
-            return "&#9788; ";
-        case "plug":
-            return "&#9889; ";
-        default:
-            return "";
-    }
-}
 
 function fetchData() {
     const currentData = cons;
@@ -92,6 +89,7 @@ function fetchData() {
             }
         })
         .then((data: MQTTData) => {
+            removeMessage();
             cons.innerHTML = "";
             const titles: {[key: string]: string} = {
                 "Time": "time",
@@ -116,16 +114,34 @@ function fetchData() {
             console.log("Headlines added...")
             data.forEach((element, _) => {
                 const paragraph = document.createElement("p");
+                const copyString = ["copy '", "' to clipboard!"];
 
                 const time = document.createElement("p");
                 time.classList.add("time");
                 time.innerText = element.time;
+                time.title = copyString[0] + truncate(element.time, 10, true) + copyString[1];
+                time.onclick = () => {
+                    navigator.clipboard.writeText(element.time);
+                    addMessage("Copied time to clipboard!", "success");
+                };
+
                 const topic = document.createElement("p");
                 topic.classList.add("topic");
                 topic.innerText = element.topic;
+                topic.title = copyString[0] + truncate(element.topic, 20, false) + copyString[1];
+                topic.onclick = () => {
+                    navigator.clipboard.writeText(element.topic);
+                    addMessage("Copied MQTT topic to clipboard!", "success");
+                };
+
                 const payload = document.createElement("p");
                 payload.classList.add("load");
                 payload.innerText = element.payload;
+                payload.title = copyString[0] + truncate(element.payload, 25, true) + copyString[1];
+                payload.onclick = () => {
+                    navigator.clipboard.writeText(element.payload);
+                    addMessage("Copied MQTT payload to clipboard!", "success");
+                };
 
                 paragraph.appendChild(time);
                 paragraph.appendChild(topic);
@@ -133,13 +149,13 @@ function fetchData() {
                 cons.appendChild(paragraph);
             });
             console.log("Refreshed data...")
-            removeMessage();
         })
         .catch(error => {
             addMessage("Error fetching MQTT data!", "error");
             console.error(error);
             cons = currentData;
         });
+
     const tasmTab = document.getElementById("tasmota-tab");
     if (tasmTab != undefined) {
         const currentDevices = tasmTab.innerHTML;
@@ -163,7 +179,7 @@ function fetchData() {
 
                         const name = document.createElement("h3");
                         name.classList.add("name");
-                        name.innerHTML = getIconForType(element.type) + element.name;
+                        name.innerHTML = element.name;
 
                         container.appendChild(name);
 

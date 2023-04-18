@@ -1,19 +1,20 @@
 :root {
     --bg: #fafafa;
     --text: #333;
-    --bar-bg: #ddd;
+    --bar-bg: #c2c2c2;
     --console-bg: #222;
+    --console-bg-hover: #262626;
     --console-fg: #0e0;
-    --error-bg: #fcc;
-    --error-fg: #c00;
+    --error-bg: #ffc8c8;
+    --error-fg: #b20000;
     --conn-no: #c00;
     --info-bg: #ccf;
     --info-fg: #00c;
-    --success-bg: #cfc;
-    --success-fg: #0c0;
+    --success-bg: #c0fdc0;
+    --success-fg: #01b101;
     --conn-yes: #0c0;
-    --warning-bg: #ffc;
-    --warning-fg: #cc0;
+    --warning-bg: #ffffb3;
+    --warning-fg: #a8a800;
     --font-size: 20px;
 }
 
@@ -22,14 +23,14 @@
         --bg: #444;
         --text: #fafafa;
         --bar-bg: #333;
-        --error-fg: #fcc;
-        --error-bg: #c00;
+        --error-fg: #ffc8c8;
+        --error-bg: #b20000;
         --info-fg: #ccf;
         --info-bg: #00c;
-        --success-fg: #cfc;
-        --success-bg: #0c0;
-        --warning-fg: #ffc;
-        --warning-bg: #cc0;
+        --success-fg: #c0fdc0;
+        --success-bg: #01b101;
+        --warning-fg: #ffffb3;
+        --warning-bg: #a8a800;
     }
 }
 
@@ -78,7 +79,7 @@ body {
 }
 
 #tasmota-tab > div {
-    margin-bottom: 10px;
+    margin-bottom: calc(var(--font-size) * 0.85);
     width: max-content;
 }
 
@@ -209,8 +210,8 @@ nav .zoom button.tasmota:hover div {
 
 #message {
     width: 100%;
-    padding: 10px 20px;
-    font-size: 25px;
+    padding: calc(var(--font-size) / 2) var(--font-size);
+    font-size: var(--font-size);
 }
 
 #message[data-stylized="error"] {
@@ -269,6 +270,15 @@ nav .zoom button.tasmota:hover div {
 
 #console::-webkit-scrollbar-thumb {
   background-color: var(--bg);
+  cursor: pointer;
+  border-bottom: 1px solid var(--text);
+  border-top: 1px solid var(--text);
+  transition: 200ms ease-in-out;
+}
+
+#console::-webkit-scrollbar-thumb:hover {
+  border-top: 1px solid var(--console-fg);
+  border-bottom: 1px solid var(--console-fg);
 }
 
 #console > p {
@@ -279,6 +289,12 @@ nav .zoom button.tasmota:hover div {
     grid-template-columns: 0.5fr 1fr 3fr;
     grid-template-rows: 1fr;
     grid-column-gap: var(--font-size);
+    background-color: transparent;
+    transition: 200ms ease-in-out;
+}
+
+#console > p:hover:not(:first-child):not(:nth-child(2)) {
+    background-color: var(--console-bg-hover);
 }
 
 #console > p > p {

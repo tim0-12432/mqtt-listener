@@ -111,12 +111,8 @@ if __name__ == "__main__":
         device_stats = []
         for device_topic in device_name_topics:
             payload = results.loc[results["topic"] == device_topic].tail(1)["payload"].values[0].decode("utf-8")
-            device_type = "unknown"
-            if "Voltage" in payload: device_type = "plug"
-            if "Dimmer" in payload and "Color" in payload: device_type = "bulb"
             device_stats.append({
                 "name": device_topic.split("/")[-2].replace("_", " ").replace("-", " ").replace(".", " ").replace("tasmota", ""),
-                "type": device_type,
                 "topic": device_topic,
                 "stats": payload
             })
