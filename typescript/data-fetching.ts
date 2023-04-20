@@ -39,13 +39,45 @@ const listBoolItem = (text: string, stat: boolean): HTMLLIElement => {
     return li;
 }
 
-const listBarItem = (text: string, stat: number): HTMLLIElement => {
+type HSBColor = {
+    h: number,
+    s: number,
+    b: number
+}
+
+const listColorItem = (text: string, stat: HSBColor): HTMLLIElement => {
+
+    const hsbToHsl = (h: number, s: number, b: number): string => {
+        const x = (200 - s) * b / 100;
+        const newS = x === 0 || x === 200 ? 0 : Math.round(s * b / (x <= 100 ? x : 200 - x));
+        const l = Math.round(x / 2);
+        return `hsl(${h}, ${newS}%, ${l}%)`;
+    };
+
+    const li = document.createElement("li");
+    const name = document.createElement("p");
+    name.innerText = text + ":";
+    const container = document.createElement("div");
+    const status = document.createElement("div");
+    status.classList.add("colorpoint");
+    status.style.backgroundColor = hsbToHsl(stat.h, stat.s, stat.b);
+    li.appendChild(name);
+    container.appendChild(status);
+    li.appendChild(container);
+    return li;
+}
+
+const listBarItem = (text: string, stat: number, unit: string = "%"): HTMLLIElement => {
     const li = document.createElement("li");
     const name = document.createElement("p");
     name.innerText = text + ":";
     const bar_container = document.createElement("p");
     bar_container.classList.add("bar");
-    bar_container.title = Math.round(Math.abs(stat) * 100) / 100 + "%";
+    if (unit === "%") {
+        bar_container.title = Math.round(Math.abs(stat) * 100) / 100 + "%";
+    } else {
+        bar_container.title = stat + unit;
+    }
     const bar = document.createElement("span");
     bar.style.width = Math.abs(stat) + "%";
     li.appendChild(name);
@@ -64,6 +96,30 @@ function truncate(input: string, length: number, front: boolean = true) {
     }
     return input;
 };
+
+async function copyToClipboard(text: string, entity: string = "text") {
+    if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+        addMessage(`Copied ${entity} to clipboard!`, "success");
+    } else {
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        textArea.style.position = "absolute";
+        textArea.style.left = "-300%";
+        document.body.prepend(textArea);
+        textArea.select();
+
+        try {
+            document.execCommand('copy');
+            addMessage(`Copied ${entity} to clipboard!`, "success");
+        } catch (error) {
+            console.error(error);
+            addMessage(`Error copying '${truncate(text, 20)}'!`, "error");
+        } finally {
+            textArea.remove();
+        }
+    }
+}
 
 type MQTTData = {
     time: string,
@@ -121,8 +177,7 @@ function fetchData() {
                 time.innerText = element.time;
                 time.title = copyString[0] + truncate(element.time, 10, true) + copyString[1];
                 time.onclick = () => {
-                    navigator.clipboard.writeText(element.time);
-                    addMessage("Copied time to clipboard!", "success");
+                    copyToClipboard(element.time, "time");
                 };
 
                 const topic = document.createElement("p");
@@ -130,8 +185,7 @@ function fetchData() {
                 topic.innerText = element.topic;
                 topic.title = copyString[0] + truncate(element.topic, 20, false) + copyString[1];
                 topic.onclick = () => {
-                    navigator.clipboard.writeText(element.topic);
-                    addMessage("Copied MQTT topic to clipboard!", "success");
+                    copyToClipboard(element.topic, "MQTT topic");
                 };
 
                 const payload = document.createElement("p");
@@ -139,8 +193,7 @@ function fetchData() {
                 payload.innerText = element.payload;
                 payload.title = copyString[0] + truncate(element.payload, 25, true) + copyString[1];
                 payload.onclick = () => {
-                    navigator.clipboard.writeText(element.payload);
-                    addMessage("Copied MQTT payload to clipboard!", "success");
+                    copyToClipboard(element.payload, "MQTT payload");
                 };
 
                 paragraph.appendChild(time);
@@ -189,7 +242,20 @@ function fetchData() {
                         container.appendChild(listBarItem("Load", stats.LoadAvg));
                         container.appendChild(listBarItem("Heap", stats.Heap));
                         container.appendChild(listItem("SSID", stats.Wifi.SSId));
-                        container.appendChild(listBarItem("Signal", stats.Wifi.Signal));
+                        container.appendChild(listBarItem("Signal", stats.Wifi.Signal, "dBm"));
+                        if (stats.Dimmer !== undefined) {
+                            container.appendChild(listBarItem("Dimmer", stats.Dimmer));
+                        }
+                        if (stats.HSBColor !== undefined) {
+                            const [hue, saturation, brightness] = stats.HSBColor.split(",");
+                            container.appendChild(listColorItem("Color", {h: hue, s: saturation, b: brightness}));
+                        }
+                        if (stats.Vcc !== undefined) {
+                            container.appendChild(listBarItem("Vcc", stats.Vcc, "V"));
+                        }
+                        if (stats.Fade !== undefined) {
+                            container.appendChild(listBoolItem("Fading", stats.Fade.toUpperCase() === "ON"));
+                        }
                         tasmTab.appendChild(container);
                     });
                 }

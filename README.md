@@ -1,6 +1,13 @@
-# MQTT Monitoring Tool
+<div align="center">
+    <img width="35%" alt="mqtt-listener" src="./static/android-chrome-512x512.png"/>
+</div>
 
-A flask server which listens to mqtt topics and displays them on a webpage.
+<div align="center">
+    <h1>MQTT Monitoring Tool</h1>
+    <span>A flask server which listens to mqtt topics and displays them on a webpage.</span>
+</div>
+
+---
 
 ## Use
 
@@ -25,6 +32,8 @@ For debugging purposes you can set following environment variables:
 
 ## Images
 
-![ipad with dark mode](doc/localhost_8080_(iPad).png)
-
-![iphone with light mode](doc/localhost_8080_(iPhone%206_7_8%20Plus).png)
+<p align="center">
+    <img width="60%" alt="ipad with dark mode" src="./doc/localhost_8080_(iPad).png"/>
+&nbsp;&nbsp;
+    <img width="35%" alt="iphone with light mode" src="./doc/localhost_8080_(iPhone%206_7_8%20Plus).png"/>
+</p>

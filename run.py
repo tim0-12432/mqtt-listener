@@ -68,6 +68,8 @@ if __name__ == "__main__":
         global results
         if (cfg.sys_on == "False") and msg.topic.startswith("$SYS"):
             return
+        if msg.retain == True:
+            return
         if results.shape[0] >= cfg.max_entries:
             results = results.iloc[1:, :]
         new_record = pd.DataFrame.from_records([{"time": msg.timestamp, "topic": msg.topic, "payload": msg.payload}])
