@@ -129,6 +129,15 @@ if __name__ == "__main__":
             result_list.append({"time": time, "topic": row["topic"], "payload": str(row["payload"]).replace("b\'", "").replace("\'", "")})
         return jsonify(result_list)
 
+    @app.route("/health", methods=["GET"])
+    def health():
+        if not client.is_connected():
+            logging.error(f"Client is not connected to {cfg.mqtt.host}:{cfg.mqtt.port}!")
+            return "1"
+        if results.shape[0] == 0:
+            logging.warn("Data is empty!")
+        return "0"
+
     if cfg["app.debug"] == True:
         app.run(host=cfg["app.host"], port=cfg["app.port"], debug=cfg["app.debug"], use_reloader=False)
     else:
