@@ -135,7 +135,7 @@ if __name__ == "__main__":
             logging.error(f"Client is not connected to {cfg.mqtt.host}:{cfg.mqtt.port}!")
             return "1"
         if results.shape[0] == 0:
-            logging.warn("Data is empty!")
+            logging.warning("Data is empty!")
         return "0"
 
     if cfg["app.debug"] == True:
