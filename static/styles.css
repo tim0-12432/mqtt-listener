@@ -65,12 +65,35 @@ body {
     min-width: 100px;
     max-width: 100%;
     min-height: 50px;
+    max-height: 75vh;
+    overflow-y: auto;
     background-color: var(--bg);
     font-size: var(--font-size);
     color: var(--text);
     padding: 20px;
     transform: translateX(0);
     transition: 300ms ease-in-out;
+}
+
+#tasmota-tab::-webkit-scrollbar {
+    width: 20px;
+}
+
+#tasmota-tab::-webkit-scrollbar-track {
+  background-color: var(--bg);
+}
+
+#tasmota-tab::-webkit-scrollbar-thumb {
+  background-color: var(--bar-bg);
+  cursor: pointer;
+  border-bottom: 1px solid var(--text);
+  border-top: 1px solid var(--text);
+  transition: 200ms ease-in-out;
+}
+
+#tasmota-tab::-webkit-scrollbar-thumb:hover {
+  border-top: 1px solid var(--console-fg);
+  border-bottom: 1px solid var(--console-fg);
 }
 
 #tasmota-tab.hidden {
